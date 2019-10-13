@@ -55,14 +55,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="忘轩">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="js中那些不容易注意到的坑Object.assign()&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;这个基本是前端都知道可以拿来干什么用，无非深拷贝嘛。但是！！！我直到今天才注意到，这个深拷贝是有限制的，它是披着深拷贝外衣的浅拷贝。是不是有些同学觉得这里有些生疏，哈哈。举个栗子：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于JS需要知道的小知识点">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/关于JS需要知道的小知识点/index.html">
 <meta property="og:site_name" content="忘轩">
+<meta property="og:description" content="js中那些不容易注意到的坑Object.assign()&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;这个基本是前端都知道可以拿来干什么用，无非深拷贝嘛。但是！！！我直到今天才注意到，这个深拷贝是有限制的，它是披着深拷贝外衣的浅拷贝。是不是有些同学觉得这里有些生疏，哈哈。举个栗子：">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-10-13T13:24:47.675Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="忘轩">
-  <link rel="canonical" href="http://yoursite.com/archives/">
+<meta name="twitter:title" content="关于JS需要知道的小知识点">
+<meta name="twitter:description" content="js中那些不容易注意到的坑Object.assign()&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;这个基本是前端都知道可以拿来干什么用，无非深拷贝嘛。但是！！！我直到今天才注意到，这个深拷贝是有限制的，它是披着深拷贝外衣的浅拷贝。是不是有些同学觉得这里有些生疏，哈哈。举个栗子：">
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/关于JS需要知道的小知识点/">
 
 
 <script id="page-configurations">
@@ -70,13 +74,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
-    isArchive: true
+    isArchive: false
   };
 </script>
 
-  <title>Archive | 忘轩</title>
+  <title>关于JS需要知道的小知识点 | 忘轩</title>
   
 
 
@@ -173,15 +177,6 @@
 
     
 
-  
-    
-    
-  
-    
-    
-  
-  
-
 </nav>
 </div>
     </header>
@@ -200,124 +195,102 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        
-        
-        
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/关于JS需要知道的小知识点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jason Yue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="忘轩">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
           
-        
-        <span class="collection-header">Um..! 3 posts in total. Keep on posting.</span>
-      </div>
-      
+            关于JS需要知道的小知识点
+            
 
-      
+          
+        </h1>
 
-  
-  
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
 
-  
+              
+                
+              
+
+              <time title="Created: 2019-10-13 21:21:59 / Modified: 21:24:47" itemprop="dateCreated datePublished" datetime="2019-10-13T21:21:59+08:00">2019-10-13</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
-    </div>
-  
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h3 id="js中那些不容易注意到的坑Object-assign"><a href="#js中那些不容易注意到的坑Object-assign" class="headerlink" title="js中那些不容易注意到的坑Object.assign()"></a>js中那些不容易注意到的坑Object.assign()</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">这个基本是前端都知道可以拿来干什么用，无非深拷贝嘛。但是！！！我直到今天才注意到，这个深拷贝是有限制的，它是披着深拷贝外衣的浅拷贝。是不是有些同学觉得这里有些生疏，哈哈。举个栗子：<br></font></p>
+<a id="more"></a>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-10-13T21:21:59+08:00"
-              content="2019-10-13">
-          10-13
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/10/13/关于JS需要知道的小知识点/" itemprop="url">
-            <span itemprop="name">关于JS需要知道的小知识点</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-10-13T20:39:28+08:00"
-              content="2019-10-13">
-          10-13
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/10/13/你好世界/" itemprop="url">
-            <span itemprop="name">你好世界~</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-10-13T20:35:13+08:00"
-              content="2019-10-13">
-          10-13
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/10/13/恢复博客的那天/" itemprop="url">
-            <span itemprop="name">恢复博客的那天</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">看起来是不是觉得没错啊。感觉是深拷贝啊。哈哈，别忙别忙，等看完下面再分解：<br>是不是觉得这答案有些妖异了？其实这才是Object.assign()的真正形态。当然我们平时基本上只用到了第一层复制，所以它还是可以完成我们想要的功能的。但如果你的拷贝对象层级太深，这个就无法再完成深拷贝了。<br></font></p>
 
     </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/13/你好世界/" rel="next" title="你好世界~">
+                  <i class="fa fa-chevron-left"></i> 你好世界~
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -334,6 +307,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
@@ -346,6 +324,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#js中那些不容易注意到的坑Object-assign"><span class="nav-number">1.</span> <span class="nav-text">js中那些不容易注意到的坑Object.assign()</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
