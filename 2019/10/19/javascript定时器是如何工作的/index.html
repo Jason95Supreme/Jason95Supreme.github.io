@@ -64,7 +64,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/2019/10/19/javascript定时器是如何工作的/timer1.png">
 <meta property="og:image" content="http://yoursite.com/2019/10/19/javascript定时器是如何工作的/timer2.png">
-<meta property="og:updated_time" content="2019-10-19T06:55:54.094Z">
+<meta property="og:updated_time" content="2019-10-19T07:01:12.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="javascript定时器是如何工作的">
 <meta name="twitter:description" content="这是一篇译文…原文地址是…搞忘记了&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;从最基本的层面上讲明白javascript定时器如何工作是非常重要的。很多时候它们的执行过程不直观的原因是因为他们是处于单线程中执行的。下面用三个我们能够构造和操作定时器的函数来分析。">
@@ -234,7 +234,7 @@
                 
               
 
-              <time title="Created: 2019-10-19 14:29:42 / Modified: 14:55:54" itemprop="dateCreated datePublished" datetime="2019-10-19T14:29:42+08:00">2019-10-19</time>
+              <time title="Created: 2019-10-19 14:29:42 / Modified: 15:01:12" itemprop="dateCreated datePublished" datetime="2019-10-19T14:29:42+08:00">2019-10-19</time>
             </span>
           
             
@@ -279,6 +279,11 @@
 
 <img src="/2019/10/19/javascript定时器是如何工作的/timer2.png">
 
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">粗略瞟一眼这两段代码功能似乎是相同的，但实际上并非如此。尤其是setTimeout的代码总是会在前一个回调执行之后存在至少10ms的延迟（为什么是至少呢，因为可能会有某些原因导致延时加长，但延时绝不会比10ms更短）。然而setInterval将会试图每10ms执行一次回调不管上一次回调是什么时候执行的。<br></font></p>
+<font size="3">
+
+<p><strong>定时器有很多我们需要学习的东西，在这里只是总结几条比较重要的：</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>1. javascript引擎只有一个线程，迫使异步事件需要排队执行。</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>2. setTimeout和setInterval在如何执行异步代码上有根本性的不同。</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>3. 如果一个timer无法立即执行那么它将被延迟到下一个可能的执行点（这会导致比期望的延迟时间更长）。</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>4. 如果有段代码执行了足够长的时间那么interval则可能会连续执行相互之间没有没有延迟（这个时间要比指定的延迟时间更长）。</strong></p>
+<p>所有以上的这些都是非常重要的知识点需要我们去记住。在不时有产生大量异步事件的时候，知道javascript引擎是如何工作的可以让我们在构建一个先进的应用程序时拥有一个极为强力的基础。<br></p></font><p></p>
 
     </div>
 
