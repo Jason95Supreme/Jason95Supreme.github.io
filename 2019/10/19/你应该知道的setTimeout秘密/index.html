@@ -62,7 +62,7 @@
 <meta property="og:site_name" content="忘轩">
 <meta property="og:description" content="来来来，看下面这段代码：12345let start = new Date()setTimeout(function() &amp;#123;    console.log(new Date() - start)&amp;#125;, 500)    while(new Date() - start &amp;lt; 1000) &amp;#123;&amp;#125;">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-10-19T06:34:25.448Z">
+<meta property="og:updated_time" content="2019-10-19T07:07:49.358Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="你应该知道的setTimeout秘密">
 <meta name="twitter:description" content="来来来，看下面这段代码：12345let start = new Date()setTimeout(function() &amp;#123;    console.log(new Date() - start)&amp;#125;, 500)    while(new Date() - start &amp;lt; 1000) &amp;#123;&amp;#125;">
@@ -231,7 +231,7 @@
                 
               
 
-              <time title="Created: 2019-10-19 14:12:07 / Modified: 14:34:25" itemprop="dateCreated datePublished" datetime="2019-10-19T14:12:07+08:00">2019-10-19</time>
+              <time title="Created: 2019-10-19 14:12:07 / Modified: 15:07:49" itemprop="dateCreated datePublished" datetime="2019-10-19T14:12:07+08:00">2019-10-19</time>
             </span>
           
             
@@ -258,7 +258,7 @@
 >**1004**
 
 <p>while 之前就设置了定时器，并添加到队列里面（假设时间点 a）， while 执行了1000ms 之后线程去队列里面取，发现 a + 1000ms &gt; a + 500ms 说明 setTimeout 已经可以被执行了，不需要再等 500ms。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">document.querySelector(#one_input).onkeydown = function() &#123;</span><br><span class="line">    document.querySelector(#one_span).innerHTML = this.value</span><br><span class="line">&#125;</span><br><span class="line">document.querySelector(#second_input).onkeydown = function() &#123;</span><br><span class="line">    setTimeout(function() &#123;</span><br><span class="line">        document.querySelector(#second_span).innerHTML = document.querySelector(#second_input).value</span><br><span class="line">    &#125;, 0)  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="setTimeout的应用："><a href="#setTimeout的应用：" class="headerlink" title="setTimeout的应用："></a>setTimeout的应用：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">document.querySelector(#one_input).onkeydown = function() &#123;</span><br><span class="line">    document.querySelector(#one_span).innerHTML = this.value</span><br><span class="line">&#125;</span><br><span class="line">document.querySelector(#second_input).onkeydown = function() &#123;</span><br><span class="line">    setTimeout(function() &#123;</span><br><span class="line">        document.querySelector(#second_span).innerHTML = document.querySelector(#second_input).value</span><br><span class="line">    &#125;, 0)  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当你往两个表单输入内容时，你会发现未使用setTimeout函数的只会获取到输入前的内容，而使用setTimeout函数的则会获取到输入的内容。</p>
 <p>这是为什么呢？</p>
@@ -337,7 +337,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#来来来，看下面这段代码："><span class="nav-number">1.</span> <span class="nav-text">来来来，看下面这段代码：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#来来来，看下面这段代码："><span class="nav-number">1.</span> <span class="nav-text">来来来，看下面这段代码：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setTimeout的应用："><span class="nav-number">2.</span> <span class="nav-text">setTimeout的应用：</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
