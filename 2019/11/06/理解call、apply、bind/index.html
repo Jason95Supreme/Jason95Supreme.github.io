@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="好像真是一件难办的事儿？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;以前看到各种call、apply、bind的调用简直是一脸懵逼，也不说完全不知道啥意思，但要想说很明白他们是怎么实现怎么调用的那也不现实。总感觉一半靠运气，一半靠实力，哈哈。。。不过在不懈的努力下，经过多次别人文章阐述的洗礼，终于能用自己的方式理解了这些个调用的意义。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解call、apply、bind">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/理解call、apply、bind/index.html">
+<meta property="og:site_name" content="忘轩">
+<meta property="og:description" content="好像真是一件难办的事儿？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;以前看到各种call、apply、bind的调用简直是一脸懵逼，也不说完全不知道啥意思，但要想说很明白他们是怎么实现怎么调用的那也不现实。总感觉一半靠运气，一半靠实力，哈哈。。。不过在不懈的努力下，经过多次别人文章阐述的洗礼，终于能用自己的方式理解了这些个调用的意义。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-11-06T13:45:22.302Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解call、apply、bind">
+<meta name="twitter:description" content="好像真是一件难办的事儿？&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;以前看到各种call、apply、bind的调用简直是一脸懵逼，也不说完全不知道啥意思，但要想说很明白他们是怎么实现怎么调用的那也不现实。总感觉一半靠运气，一半靠实力，哈哈。。。不过在不懈的努力下，经过多次别人文章阐述的洗礼，终于能用自己的方式理解了这些个调用的意义。">
+  <link rel="canonical" href="http://yoursite.com/2019/11/06/理解call、apply、bind/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>理解call、apply、bind | 忘轩</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">忘轩</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/06/理解call、apply、bind/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jason Yue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="忘轩">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            理解call、apply、bind
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-11-06 21:10:59 / Modified: 21:45:22" itemprop="dateCreated datePublished" datetime="2019-11-06T21:10:59+08:00">2019-11-06</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="好像真是一件难办的事儿？"><a href="#好像真是一件难办的事儿？" class="headerlink" title="好像真是一件难办的事儿？"></a>好像真是一件难办的事儿？</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">以前看到各种call、apply、bind的调用简直是一脸懵逼，也不说完全不知道啥意思，但要想说很明白他们是怎么实现怎么调用的那也不现实。总感觉一半靠运气，一半靠实力，哈哈。。。不过在不懈的努力下，经过多次别人文章阐述的洗礼，终于能用自己的方式理解了这些个调用的意义。<br></font></p>
+<a id="more"></a>
+
+<h3 id="如何用自己的方式理解call"><a href="#如何用自己的方式理解call" class="headerlink" title="如何用自己的方式理解call"></a>如何用自己的方式理解call</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">话不多说，直接用例子说明一切，基于这个再来理解会容易许多。<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let person = &#123;</span><br><span class="line">  name: &apos;Abiel&apos;</span><br><span class="line">&#125;</span><br><span class="line">function sayHi(age,sex) &#123;</span><br><span class="line">  console.log(this.name, age, sex);</span><br><span class="line">&#125;</span><br><span class="line">sayHi.call (person, 25, &apos;男&apos;) // 输出Abiel 25 男</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">从简单分析起，调用了call之后，第一个参数是当前方法的this，即作用域，call后面的参数都是作为函数参数传进去使用的。那么如何用自己的方式来理解呢？可以这样来想，每当看到call的时候，第一个参数这里是person对象，那么即sayHi的this指向了person对象，也就是！person对象里多了一个sayHi的函数，长这样。<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let person = &#123;</span><br><span class="line">  name: &apos;Abiel&apos;,</span><br><span class="line">  sayHi: function(age,sex) &#123;</span><br><span class="line">    console.log(this.name, age, sex);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">一下就变得很熟悉了，这个时候sayHi被调用执行了，this.name即是指的person对象中的name: ‘Abiel’，再把后面的参数作为函数参数传进去执行后，就是那个结果了。来看看原生实现：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.newCall = function(context, ...parameter) &#123;</span><br><span class="line"> if (typeof context === &apos;object&apos; || typeof context === &apos;function&apos;) &#123;</span><br><span class="line">    context = context || window</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    context = Object.create(null)</span><br><span class="line">&#125;</span><br><span class="line">  context[&apos;fn&apos;] = this  </span><br><span class="line">  const res =context[&apos;fn&apos;](...parameter)</span><br><span class="line">  delete context.fn;</span><br><span class="line">  return res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">在function的原型上自定义一个自己的call方法，第一个参数指代当前的上下文，第二个参数指代即将传给函数执行的参数。如果第一个参数是对象或者函数的话，直接就将上下文指向对象或者函数，其他类型就创建一个新的对象类型。这里可以简单的将context理解为{}，毕竟函数也算是对象了，可以拥有自己的属性和方法。这个时候我们可以在{}新对象内部新创建一个属性名叫fn。因为call是将第一个参数作为被调用函数的this作用域的，<strong>意思就是我们可以将其理解成函数将要在第一个参数的内部进行调用</strong>。而这里sayHi对newCall进行了调用，那么newCall自身的this指向的就是sayHi这个函数本身，我们将sayHi函数本身赋值给了context内部的属性fn。下面紧接着在对象context内部进行了函数的调用，并传入参数，最后删除这个属性。一个call函数的执行流程就算完了。</font></p>
+<h3 id="apply的原生实现"><a href="#apply的原生实现" class="headerlink" title="apply的原生实现"></a>apply的原生实现</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">apply这里跟call有点区别就是apply参数是数组。来看看原生实现（内部基本与call的实现一致）：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.newApply = function(context, parameter) &#123;</span><br><span class="line">  if (typeof context === &apos;object&apos; || typeof context === &apos;function&apos;) &#123;</span><br><span class="line">    context = context || window</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    context = Object.create(null)</span><br><span class="line">  &#125;</span><br><span class="line">  let fn = Symbol()</span><br><span class="line">  context[fn] = this</span><br><span class="line">  return res=context[fn](..parameter);</span><br><span class="line">  delete context[fn]</span><br><span class="line">  return res</span><br><span class="line">&#125;</span><br><span class="line">sayHi.newApply (person,[ 25, &apos;男&apos;]) //Abiel 25 男</span><br></pre></td></tr></table></figure>
+
+<h3 id="bind的原生实现"><a href="#bind的原生实现" class="headerlink" title="bind的原生实现"></a>bind的原生实现</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">bind的区别更大些，因为它返回的是一个新的函数。来看看原生实现：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Function.prototype.bind = function (context,...innerArgs) &#123;</span><br><span class="line">  var me = this</span><br><span class="line">  return function (...finnalyArgs) &#123;</span><br><span class="line">    return me.call(context,...innerArgs,...finnalyArgs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">let person = &#123;</span><br><span class="line">  name: &apos;Abiel&apos;</span><br><span class="line">&#125;</span><br><span class="line">function sayHi(age,sex) &#123;</span><br><span class="line">  console.log(this.name, age, sex);</span><br><span class="line">&#125;</span><br><span class="line">let personSayHi = sayHi.bind(person, 25)</span><br><span class="line">personSayHi(&apos;男&apos;)</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/19/javascript定时器是如何工作的/" rel="next" title="javascript定时器是如何工作的">
+                  <i class="fa fa-chevron-left"></i> javascript定时器是如何工作的
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#好像真是一件难办的事儿？"><span class="nav-number">1.</span> <span class="nav-text">好像真是一件难办的事儿？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何用自己的方式理解call"><span class="nav-number">2.</span> <span class="nav-text">如何用自己的方式理解call</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apply的原生实现"><span class="nav-number">3.</span> <span class="nav-text">apply的原生实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind的原生实现"><span class="nav-number">4.</span> <span class="nav-text">bind的原生实现</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Jason Yue">
+  <p class="site-author-name" itemprop="name">Jason Yue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Jason95Supreme" title="GitHub &rarr; https://github.com/Jason95Supreme" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason Yue</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/muse.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
