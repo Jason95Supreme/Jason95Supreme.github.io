@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"right","display":"hide","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="为撒子突然想到写这个了&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近正在看vue源码实现机制的视频，里面讲到了如何实现模板替换的问题，听了课之后觉得光听不练还是菜，所以最后决定仿造视频的例子在自己用自己的理解写一遍，以此加深记忆。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="仿造vue模板写一个自定义模板插入数据的小demo">
+<meta property="og:url" content="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/index.html">
+<meta property="og:site_name" content="忘轩">
+<meta property="og:description" content="为撒子突然想到写这个了&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近正在看vue源码实现机制的视频，里面讲到了如何实现模板替换的问题，听了课之后觉得光听不练还是菜，所以最后决定仿造视频的例子在自己用自己的理解写一遍，以此加深记忆。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/2.png">
+<meta property="og:updated_time" content="2019-11-09T14:23:43.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="仿造vue模板写一个自定义模板插入数据的小demo">
+<meta name="twitter:description" content="为撒子突然想到写这个了&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;最近正在看vue源码实现机制的视频，里面讲到了如何实现模板替换的问题，听了课之后觉得光听不练还是菜，所以最后决定仿造视频的例子在自己用自己的理解写一遍，以此加深记忆。">
+<meta name="twitter:image" content="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/1.png">
+  <link rel="canonical" href="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>仿造vue模板写一个自定义模板插入数据的小demo | 忘轩</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">忘轩</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">天下事有难易乎？为之，则难者亦易矣；不为，则易者亦难矣。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jason Yue">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="忘轩">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            仿造vue模板写一个自定义模板插入数据的小demo
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-11-09 21:35:21 / Modified: 22:23:43" itemprop="dateCreated datePublished" datetime="2019-11-09T21:35:21+08:00">2019-11-09</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="为撒子突然想到写这个了"><a href="#为撒子突然想到写这个了" class="headerlink" title="为撒子突然想到写这个了"></a>为撒子突然想到写这个了</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">最近正在看vue源码实现机制的视频，里面讲到了如何实现模板替换的问题，听了课之后觉得光听不练还是菜，所以最后决定仿造视频的例子在自己用自己的理解写一遍，以此加深记忆。<br></font></p>
+<a id="more"></a>
+
+<h3 id="开始，先写一个html"><a href="#开始，先写一个html" class="headerlink" title="开始，先写一个html"></a>开始，先写一个html</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">既然要实现模板替换，那么不可缺少的html先得拿出来，主体html代码如下：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;root&quot; class=&quot;root&quot;&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">        &lt;p&gt;&#123;&#123;name&#125;&#125;--&#123;&#123;msg&#125;&#125;&lt;/p&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123;sex.sex1.male&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123;sex.sex1.female&#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="来点儿数据加点料"><a href="#来点儿数据加点料" class="headerlink" title="来点儿数据加点料"></a>来点儿数据加点料</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">这里我们在html自定义了模板写法{ { } }，里面包含了我们想要测试的一些字段，接下来就是数据了，这里我提供了如下数据：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">    name: &apos;我都名字&apos;,</span><br><span class="line">    msg: &apos;有条消息&apos;,</span><br><span class="line">    sex: &#123;</span><br><span class="line">        sex1: &#123;</span><br><span class="line">        male: &apos;男&apos;,</span><br><span class="line">        female: &apos;女&apos;,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">因为是自己写出来测试的缘故，就随便写死了些数据方便测试。我们都知道Vue的话引入了库之后在js里面new一个Vue的实例，参数为一个对象，包含要挂载到的节点属性名，数据，这里简单处理我们就只提供了节点和数据了。从上面的html代码里可以看到，我们准备挂载的节点属性名为root，参照vue挂载实例的方式我们可以写出下面的代码来：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">new newVue(&#123;</span><br><span class="line">    el: &quot;#root&quot;,</span><br><span class="line">    data: &#123;</span><br><span class="line">        name: &apos;我都名字&apos;,</span><br><span class="line">        msg: &apos;有条消息&apos;,</span><br><span class="line">        sex: &#123;</span><br><span class="line">            sex1: &#123;</span><br><span class="line">            male: &apos;男&apos;,</span><br><span class="line">            female: &apos;女&apos;,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="正菜在这里"><a href="#正菜在这里" class="headerlink" title="正菜在这里"></a>正菜在这里</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">而要实现上面的这个newVue构造函数的话，我们需要对传入的参数进行处理。这里理一下思路：<br><strong>1. 先用cloneNode(true)方法拷贝一份原dom节点的数据。因为我们不能直接修改原dom，不然后面如果有其他的数据都没法继续渲染了。（模板是不变的，变得是数据）</strong><br><strong>2. 传入的节点进行递归遍历，查找到所有格式为{ { } }的文本节点，并用data中的数据替换文本节点的nodevalue。</strong><br><strong>3. 将修改过后的新dom元素替换原本的dom节点。</strong><br>我使用了一个class语法糖的形式进行newVue构造函数的编写，render函数作为渲染函数，compiler函数处理内部递归替换逻辑，update函数使用新节点替换旧节点。相关实现代码如下：<br></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">class newVue &#123;</span><br><span class="line">  constructor(options) &#123;</span><br><span class="line">    this._el = document.querySelector(options.el)</span><br><span class="line">    this.$el = this._el.cloneNode(true)</span><br><span class="line">    this._parent = this._el.parentNode</span><br><span class="line">    this._data = options.data</span><br><span class="line">    // 替换原本的节点</span><br><span class="line">    this.render()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function compiler(template, data) &#123;</span><br><span class="line">  const reg = /\&#123;\&#123;(.*?)\&#125;\&#125;/g</span><br><span class="line">  const childNodes = template.childNodes</span><br><span class="line">  </span><br><span class="line">  for(let i=0; i&lt;childNodes.length; i++) &#123;</span><br><span class="line">    const type = childNodes[i].nodeType</span><br><span class="line">    // 文本节点</span><br><span class="line">    if(type === 3) &#123;</span><br><span class="line">      childNodes[i].nodeValue = childNodes[i].nodeValue.replace(reg, function(a, b) &#123;</span><br><span class="line">        const key = b.trim()</span><br><span class="line">        const finalTxt = this.getMultiLevel(data)</span><br><span class="line">        return finalTxt(key)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    // 元素节点</span><br><span class="line">    else if(type === 1) &#123;</span><br><span class="line">      this.compiler(childNodes[i], data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">function getMultiLevel(data) &#123;</span><br><span class="line">  return function(str) &#123;</span><br><span class="line">    const strArr = str.split(&apos;.&apos;)</span><br><span class="line">    let res = data</span><br><span class="line">    let key = &apos;&apos;</span><br><span class="line">    while(key = strArr.shift()) &#123;</span><br><span class="line">      res = res[key]</span><br><span class="line">    &#125;</span><br><span class="line">    return res</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">newVue.prototype.render = function() &#123;</span><br><span class="line">  this.compiler()</span><br><span class="line">&#125;</span><br><span class="line">newVue.prototype.compiler = function() &#123;</span><br><span class="line">  compiler(this.$el, this._data)</span><br><span class="line">  this.update()</span><br><span class="line">&#125;</span><br><span class="line">newVue.prototype.update = function() &#123;</span><br><span class="line">  this._parent.replaceChild(this.$el, this._el)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="落幕"><a href="#落幕" class="headerlink" title="落幕"></a>落幕</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;<font size="3">上面代码中还有个我刚刚没提到的函数：<strong>getMultiLevel</strong>，这个函数采用了柯里化写法，简化了需要传给函数参数的个数，内部则是对多层级模板写法例如：{ {sex.sex1.male} }，进行递归遍历，以访问到更深层次的data数据。最后的实现效果我放两张图更直观。<br></font><br>实现之前：</p>
+<img src="/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/1.png">
+<p>实现之后：</p>
+<img src="/2019/11/09/仿造vue模板写一个自定义模板插入数据的小demo/2.png">
+<p>完美！perfect！当然，上面的实现只是一个简化简化再简化的模板替换方案，还没有使用到虚拟dom。虚拟dom的话后面应该也会加上的~</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/06/理解call、apply、bind/" rel="next" title="理解call、apply、bind">
+                  <i class="fa fa-chevron-left"></i> 理解call、apply、bind
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为撒子突然想到写这个了"><span class="nav-number">1.</span> <span class="nav-text">为撒子突然想到写这个了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始，先写一个html"><span class="nav-number">2.</span> <span class="nav-text">开始，先写一个html</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来点儿数据加点料"><span class="nav-number">3.</span> <span class="nav-text">来点儿数据加点料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正菜在这里"><span class="nav-number">4.</span> <span class="nav-text">正菜在这里</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#落幕"><span class="nav-number">5.</span> <span class="nav-text">落幕</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/avatar.jpg"
+      alt="Jason Yue">
+  <p class="site-author-name" itemprop="name">Jason Yue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/Jason95Supreme" title="GitHub &rarr; https://github.com/Jason95Supreme" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jason Yue</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="//cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-nest@1/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/muse.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
